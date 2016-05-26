@@ -48,5 +48,10 @@ public class SkillCardAnimation : MonoBehaviour {
 
     }
 
+    public void Testhello()
+    {
+ 
+    }
+
 
 }
