@@ -1,0 +1,15 @@
+class instructions:
+
+SkillCardManager
+卡牌管理器，在这个组件中，可以存放选择光标正在选择的卡牌，监听射线的OnRaycastHit事件。注意在脚本关闭的时候要取消对以注册事件的监听
+
+GlobalEnum
+存放全局枚举类型
+
+Player
+玩家脚本
+
+SkillCard
+卡牌对象，每一个卡牌对象需要包含一个各自的法术，spells，
+
+
