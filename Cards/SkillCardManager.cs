@@ -60,14 +60,21 @@ public class SkillCardManager : MonoBehaviour {
     /// 随机生成一张新卡牌
     /// </summary>
     /// <returns></returns>
-    public SkillCard RandomANewCard()
+    public SkillCard RandomANewCard(int index)
     {
+        Transform anchor = cards_anchors[index];
+
         int i = Random.Range(0, cards.Count);
         Debug.Log(i);
-        SkillCard card = Instantiate(cards[i], this.transform.position, Quaternion.identity) as SkillCard;
-        card.transform.parent = this.transform;
-        card.Initialize();
-        return card;
+        GameObject card = Instantiate(cards[i], this.transform.position, Quaternion.identity) as GameObject;
+        card.transform.parent = anchor;
+        card.transform.localPosition = Vector3.zero;
+        card.transform.rotation = anchor.transform.rotation;
+        SkillCard c = card.GetComponent<SkillCard>();
+        c.indexInList = index;
+        c.ResetRigidState();
+
+        return card.GetComponent<SkillCard>();
     }
     
 
