@@ -47,31 +47,32 @@ public class SkillCard : MonoBehaviour {
             }
         }
     }
-    [SerializeField]
+    
     private bool m_isActive;
     private VRInteractiveItem interactiveItem;
     private SkillCardManager skillCardManager;
     private SkillCardAnimation cardAnimations;
     private Rigidbody rigid;
-    private MeshRenderer mesh;
+    private MeshRenderer cardMesh;
     private BoxCollider cardCollider;
 
     void OnEnable()
     {
         if (interactiveItem == null) interactiveItem = this.GetComponent<VRInteractiveItem>();
-
+        skillCardManager = SkillCardManager.instance;
         interactiveItem.OnOver += OnRayOver;
         interactiveItem.OnOut += OnRayOut;
         interactiveItem.OnClick += OnPadClick;
         interactiveItem.OnDoubleClick += OnPadDoubleClick;
     }
-
+    
 
 	void Start () {
         //获取卡片管理器实例
-        skillCardManager = SkillCardManager.instance;
         cardAnimations = this.GetComponent<SkillCardAnimation>();
         cardCollider = this.GetComponent<BoxCollider>();
+        cardMesh = this.GetComponent<MeshRenderer>();
+        rigid = this.GetComponent<Rigidbody>();
         //记录特效初始位置
         if (SpecialEffects!=null)
         {
@@ -124,17 +125,17 @@ public class SkillCard : MonoBehaviour {
         this.transform.rotation = targetPoint.rotation;
     }
 
-    public void ResetAlpha()
+    public void ResetAlpha(float a)
     {
-        Color c = this.mesh.material.color;
+        Color c = this.cardMesh.material.color;
         //重置卡牌的alpha值
-        this.mesh.material.color = new Color(c.r, c.g, c.b, 1f);
+        this.cardMesh.material.color = new Color(c.r, c.g, c.b, a);
     }
 
     public void ResetRigidState()
     {
-        this.rigid.useGravity = true;
-        this.rigid.isKinematic = true;
+        this.GetComponent<Rigidbody>().useGravity = true;
+        this.GetComponent<Rigidbody>().isKinematic = true;
     }
 
 
@@ -142,14 +143,28 @@ public class SkillCard : MonoBehaviour {
     /////////////////////////////////////////////////////////////
     //               Motions                                   
     /////////////////////////////////////////////////////////////
-    public void DropIn()
+    public void DropIn(int index)
     {
-
+        Debug.Log("index:" + index);
+        Transform targetPos = skillCardManager.cards_anchors[2];
+        
+        Reset(targetPos);
+        cardCollider.enabled = true;
+        this.transform.localRotation = targetPos.localRotation;
+        this.transform.position = targetPos.position + new Vector3(0f, 0.2f, 0f);
+        this.transform.localScale = Vector3.one * 1.24f;
+        this.ResetAlpha(0);
+        this.transform.DOMove(targetPos.position, 0.2f);
+        this.cardMesh.material.DOFade(1f, 0.2f);
     }
 
     public void DropOut()
     {
         this.cardAnimations.Fall();
+
+        SkillCard c = skillCardManager.RandomANewCard();
+        c.indexInList = this.indexInList;
+        c.DropIn(c.indexInList);
     }
 
     /////////////////////////////////////////////////////////////
@@ -190,6 +205,7 @@ public class SkillCard : MonoBehaviour {
         if(canCreatemagic)
             Player.instance.energySystem.EnergyCost(energyIndex, spells.energyCost);
 
+        //卡牌失去重力掉落
         DropOut();
     }
 

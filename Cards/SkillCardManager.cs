@@ -15,12 +15,16 @@ public class SkillCardManager : MonoBehaviour {
     public List<SkillCard> cards_all;
     public List<Transform> cards_anchors;
 
+    public List<GameObject> cards;
+
     public LinkedList<SkillCard> cards_deckLink = new LinkedList<SkillCard>();
 
 
-    [SerializeField] private CameraRay m_CameraRay;
-    [SerializeField] private VRInput m_VrInput;
-
+    [SerializeField]
+    private CameraRay m_CameraRay;
+    [SerializeField]
+    private VRInput m_VrInput;
+    private Transform m_CardsRoot;
 
     void Awake()
     {
@@ -29,9 +33,9 @@ public class SkillCardManager : MonoBehaviour {
 
     void Start()
     {
-        cards_deckLink.AddLast(cards_show[0]);
-        cards_deckLink.AddLast(cards_show[1]);
-        cards_deckLink.AddLast(cards_show[2]);
+        //cards_deckLink.AddLast(cards_show[0]);
+        //cards_deckLink.AddLast(cards_show[1]);
+        //cards_deckLink.AddLast(cards_show[2]);
     }
 
     void OnEnable()
@@ -50,5 +54,21 @@ public class SkillCardManager : MonoBehaviour {
         SkillCard card = hit.collider.GetComponent<SkillCard>();
         currentSelect = card;
     }
+
+
+    /// <summary>
+    /// 随机生成一张新卡牌
+    /// </summary>
+    /// <returns></returns>
+    public SkillCard RandomANewCard()
+    {
+        int i = Random.Range(0, cards.Count);
+        Debug.Log(i);
+        SkillCard card = Instantiate(cards[i], this.transform.position, Quaternion.identity) as SkillCard;
+        card.transform.parent = this.transform;
+        card.Initialize();
+        return card;
+    }
     
+
 }
