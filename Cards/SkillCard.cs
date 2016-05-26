@@ -80,6 +80,7 @@ public class SkillCard : MonoBehaviour {
         }
         isActive = true;
         Initialize();
+        DropIn();
 	}
 
 
@@ -93,15 +94,33 @@ public class SkillCard : MonoBehaviour {
         {
             if (ismove)
             {
-                SpecialEffects.gameObject.SetActive(true);
-                SpecialEffects.DOMove(objpos.transform.position, 0.5f);
+                ShowSpecialEffect();
+                SpecialEffects.DOLocalMove(objpos.transform.localPosition, 0.5f);
             }
             else
             {
                 SpecialEffects.DOMove(StartSpecialPos, 0.5f);
-                SpecialEffects.gameObject.SetActive(false);
+                Invoke("HideSpecialEffect", 0.3f);
             }
         }
+    }
+
+
+    /// <summary>
+    /// 显示特效
+    /// </summary>
+    public void ShowSpecialEffect()
+    {
+        SpecialEffects.gameObject.SetActive(true);
+    }
+
+
+    /// <summary>
+    /// 隐藏特效
+    /// </summary>
+    public void HideSpecialEffect()
+    {
+        SpecialEffects.gameObject.SetActive(false);
     }
 
 
@@ -113,11 +132,13 @@ public class SkillCard : MonoBehaviour {
         spells = skillCardManager.spellsSystem.spellsContainer.GetSpellsByType(type);
     }
 
+
     public void Reset(Transform targetPoint)
     {
         ResetRigidState();
         ResetTransform(targetPoint);
     }
+
 
     public void ResetTransform(Transform targetPoint)
     {
@@ -143,28 +164,24 @@ public class SkillCard : MonoBehaviour {
     /////////////////////////////////////////////////////////////
     //               Motions                                   
     /////////////////////////////////////////////////////////////
-    public void DropIn(int index)
+    public void DropIn()
     {
-        Debug.Log("index:" + index);
-        Transform targetPos = skillCardManager.cards_anchors[2];
-        
-        Reset(targetPos);
+     
         cardCollider.enabled = true;
-        this.transform.localRotation = targetPos.localRotation;
-        this.transform.position = targetPos.position + new Vector3(0f, 0.2f, 0f);
-        this.transform.localScale = Vector3.one * 1.24f;
+        //this.transform.localRotation = targetPos.localRotation;
+        this.transform.localPosition = new Vector3(0, -0.5f, 0);
         this.ResetAlpha(0);
-        this.transform.DOMove(targetPos.position, 0.2f);
-        this.cardMesh.material.DOFade(1f, 0.2f);
+        this.transform.DOLocalMove(Vector3.zero, 0.4f);
+        this.cardMesh.material.DOFade(1f, 0.4f);
     }
 
     public void DropOut()
     {
         this.cardAnimations.Fall();
 
-        SkillCard c = skillCardManager.RandomANewCard();
-        c.indexInList = this.indexInList;
-        c.DropIn(c.indexInList);
+        SkillCard c = skillCardManager.RandomANewCard(this.indexInList);
+        //c.indexInList = this.indexInList;
+        //c.DropIn(c.indexInList);
     }
 
     /////////////////////////////////////////////////////////////
