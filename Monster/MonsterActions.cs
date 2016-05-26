@@ -1,11 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class MonsterActions : MonoBehaviour {
 
     
 
     [HideInInspector] public Monster monster;
+    public event Action<Spells> OnHitBySpells;
+
+
 
     void OnEnable()
     {
@@ -14,12 +18,12 @@ public class MonsterActions : MonoBehaviour {
             monster = this.GetComponent<Monster>();
         }
 
-        monster.OnHitBySpells += GetHurt;
+        this.OnHitBySpells += GetHurt;
     }
 
     void OnDisable()
     {
-        monster.OnHitBySpells -= GetHurt;
+        this.OnHitBySpells -= GetHurt;
     }
 
     void Start()
@@ -62,5 +66,12 @@ public class MonsterActions : MonoBehaviour {
         monster.property.LoseHealth(magic.damage);
     }
 
+    public void InvokeOnHitBySpells(Spells s)
+    {
+        if (OnHitBySpells != null)
+        {
+            OnHitBySpells(s);
+        }
+    }
 
 }
