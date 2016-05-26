@@ -28,6 +28,11 @@ public class SkillCardAnimation : MonoBehaviour {
         StartCoroutine(DestroyAnimationCoroutine());
     }
 
+
+    /// <summary>
+    /// 卡牌删除动画
+    /// </summary>
+    /// <returns></returns>
     public IEnumerator DestroyAnimationCoroutine()
     {
         yield return new WaitForSeconds(2f);
@@ -35,6 +40,8 @@ public class SkillCardAnimation : MonoBehaviour {
         yield return new WaitForSeconds(1f);
         this.gameObject.SetActive(false);
     }
+
+
 
     public void PourEngergyBar()
     {
