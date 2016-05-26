@@ -21,9 +21,8 @@ public enum SpellsType
 
 [Serializable]
 public class Spells{
-
-    public SpellsType spellType;
     public string name;                         //技能名称
+    public SpellsType spellType;
     public string description;                  //技能描述
     public int level;                           //技能等级
     public int energyCost;                      //技能消耗
@@ -39,7 +38,7 @@ public class Spells{
     public float effectProbility;               //效果触发几率
     public float effectTime;                    //效果保持时间
     public float damage_effect;                 //效果伤害
-    public string prefabPath;
+    public string prefabPath;                   //法术预制物体路径
 
     //public SpellsPrefab prefab;
     //public string itemPath;
@@ -47,8 +46,8 @@ public class Spells{
 
     public void Cast(Transform startPoint)
     {
-        //SpellsPrefab sp = (SpellsPrefab)MonoBehaviour.Instantiate(prefab, startPoint.position, startPoint.rotation);
-        //sp.spells = this;
+        SpellsPrefab sp = (SpellsPrefab)MonoBehaviour.Instantiate(Resources.Load<SpellsPrefab>(prefabPath), startPoint.position, startPoint.rotation);
+        sp.spells = this;
         Debug.Log("Cast");
     }
 }

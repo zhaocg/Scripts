@@ -9,13 +9,13 @@ public class Monster : MonoBehaviour {
     public MonsterAnimations animations;
     public MonsterNavigation navigation;
 
-    public event Action<Spells> OnHitBySpells;
+    //public event Action<Spells> OnHitBySpells;
 
-    public void InvokeOnHitBySpells(Spells s)
-    {
-        if(OnHitBySpells != null)
-        {
-            OnHitBySpells(s);
-        }
-    }
+    //public void InvokeOnHitBySpells(Spells s)
+    //{
+    //    if(OnHitBySpells != null)
+    //    {
+    //        OnHitBySpells(s);
+    //    }
+    //}
 }

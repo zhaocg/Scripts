@@ -14,7 +14,7 @@ public class DamageReceiver : MonoBehaviour {
             go.GetComponent<Rigidbody>().velocity = new Vector3(0, 1, 0);
             //go.text = "-" + magic.damage;
             Destroy(go.gameObject, 0.3f);
-            monster.InvokeOnHitBySpells(magic.spells);
+            monster.actions.InvokeOnHitBySpells(magic.spells);
         }
     }
 }

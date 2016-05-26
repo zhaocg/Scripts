@@ -219,8 +219,11 @@ public class SkillCard : MonoBehaviour {
     /// </summary>
     public void OnPadClick()
     {
-        if(canCreatemagic)
+        if (canCreatemagic)
+        {
             Player.instance.energySystem.EnergyCost(energyIndex, spells.energyCost);
+            Player.instance.spells.leftCaster.spell = this.spells;
+        }
 
         //卡牌失去重力掉落
         DropOut();
