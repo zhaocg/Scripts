@@ -25,11 +25,36 @@ public class SkillCard : MonoBehaviour {
     
     //记录特效开始的位置
     public Vector3 StartSpecialPos;
+
+
+    public bool isActive
+    {
+        get
+        {
+            return m_isActive;
+        }
+
+        set
+        {
+            m_isActive = value;
+            if (value)
+            {
+                cardCollider.enabled = true;
+            }
+            else
+            {
+                cardCollider.enabled = false;
+            }
+        }
+    }
+    [SerializeField]
+    private bool m_isActive;
     private VRInteractiveItem interactiveItem;
     private SkillCardManager skillCardManager;
     private SkillCardAnimation cardAnimations;
     private Rigidbody rigid;
     private MeshRenderer mesh;
+    private BoxCollider cardCollider;
 
     void OnEnable()
     {
@@ -46,11 +71,13 @@ public class SkillCard : MonoBehaviour {
         //获取卡片管理器实例
         skillCardManager = SkillCardManager.instance;
         cardAnimations = this.GetComponent<SkillCardAnimation>();
+        cardCollider = this.GetComponent<BoxCollider>();
         //记录特效初始位置
         if (SpecialEffects!=null)
         {
             StartSpecialPos = SpecialEffects.transform.position;
         }
+        isActive = true;
         Initialize();
 	}
 
@@ -85,9 +112,10 @@ public class SkillCard : MonoBehaviour {
         spells = skillCardManager.spellsSystem.spellsContainer.GetSpellsByType(type);
     }
 
-    public void Reset()
+    public void Reset(Transform targetPoint)
     {
         ResetRigidState();
+        ResetTransform(targetPoint);
     }
 
     public void ResetTransform(Transform targetPoint)
@@ -98,7 +126,9 @@ public class SkillCard : MonoBehaviour {
 
     public void ResetAlpha()
     {
-        
+        Color c = this.mesh.material.color;
+        //重置卡牌的alpha值
+        this.mesh.material.color = new Color(c.r, c.g, c.b, 1f);
     }
 
     public void ResetRigidState()
@@ -108,13 +138,36 @@ public class SkillCard : MonoBehaviour {
     }
 
 
+
+    /////////////////////////////////////////////////////////////
+    //               Motions                                   
+    /////////////////////////////////////////////////////////////
+    public void DropIn()
+    {
+
+    }
+
+    public void DropOut()
+    {
+        this.cardAnimations.Fall();
+    }
+
+    /////////////////////////////////////////////////////////////
+    //               EVENTS                                    
+    /////////////////////////////////////////////////////////////
+
+
+
     /// <summary>
     /// 当卡牌被射线照射
     /// </summary>
     public void OnRayOver()
     {
-        SpecialEffectsMove(true);
-        canCreatemagic = true;
+        if (isActive)
+        {
+            SpecialEffectsMove(true);
+            canCreatemagic = true;
+        }
     }
 
 
@@ -137,8 +190,7 @@ public class SkillCard : MonoBehaviour {
         if(canCreatemagic)
             Player.instance.energySystem.EnergyCost(energyIndex, spells.energyCost);
 
-        this.cardAnimations.Fall();
-
+        DropOut();
     }
 
 

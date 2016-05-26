@@ -29,7 +29,9 @@ public class SkillCardManager : MonoBehaviour {
 
     void Start()
     {
-        //cards_deckLink.AddLast
+        cards_deckLink.AddLast(cards_show[0]);
+        cards_deckLink.AddLast(cards_show[1]);
+        cards_deckLink.AddLast(cards_show[2]);
     }
 
     void OnEnable()
@@ -42,14 +44,11 @@ public class SkillCardManager : MonoBehaviour {
         m_CameraRay.OnRaycasthit -= OnRaycastHit;
     }
     
+
     void OnRaycastHit(RaycastHit hit)
     {
         SkillCard card = hit.collider.GetComponent<SkillCard>();
         currentSelect = card;
     }
-
-    void OnSelectCard()
-    {
-
-    }
+    
 }
